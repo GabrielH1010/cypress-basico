@@ -2,6 +2,8 @@
 
 //O bloco describe define a suíte de testes
 describe('Central de Atendimento ao Cliente TAT', function() {
+    const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla, urna in tristique cursus, ligula tortor tincidunt massa, ac feugiat arcu justo at libero. Proin tristique nunc sit amet justo euismod bibendum. Suspendisse potenti. Fusce eget sagittis arcu, a commodo nisl. Integer eget ex in justo vulputate condimentum.'
+
     //Este é um beforeEach global, que será executado antes de cada teste neste describe
     beforeEach(function() {
         cy.visit('./src/index.html')
@@ -14,10 +16,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
     })
 
     //No caso do it.only significa que você está trabalhando somente nesse teste, ou seja, não precisa mais verificar e acessar o site se ele já está acessado
-    it.only('Preencher os campos obrigatórios e enviar o formulário', function() {
-
-        const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla, urna in tristique cursus, ligula tortor tincidunt massa, ac feugiat arcu justo at libero. Proin tristique nunc sit amet justo euismod bibendum. Suspendisse potenti. Fusce eget sagittis arcu, a commodo nisl. Integer eget ex in justo vulputate condimentum.'
-
+    it('Preencher os campos obrigatórios e enviar o formulário', function() {
         cy.get('input[type="text"][name="firstName"]') //Comando para pegar o parametro a ser preenchido
             .should('be.visible') //Comando para afirmar que o campo está visivel
             .type('Gabriel') //Comando para preencher o campo
@@ -43,5 +42,27 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
         //Comando para verificar se a mensagem de sucesso foi exibida
         cy.get('.success').should('be.visible')
+    })
+
+    it.only('Exibir mensagem de erro ao submeter o formulário com um email com formatação inválida', function(){
+        cy.get('#firstName') //Essa é uma outra forma de pegar um componente, direto pelo cypress
+            .should('be.visible')
+            .type('Gabriel')
+
+        cy.get('#lastName')
+            .should('be.visible')
+            .type('Henrique')
+
+        cy.get('#email')
+            .should('be.visible')
+            .type('gabrielhdeoliveira@gmail,com') //Nesse caso o email está em um formato incorreto (,)
+
+        cy.get('#open-text-area')
+            .should('be.visible')
+            .type(longText, { delay: 0}) 
+
+        cy.get('button[type="submit"]').click()
+
+        cy.get('.error').should('be.visible')
     })
 })
