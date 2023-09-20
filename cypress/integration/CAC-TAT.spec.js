@@ -44,7 +44,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.get('.success').should('be.visible')
     })
 
-    it.only('Exibir mensagem de erro ao submeter o formulário com um email com formatação inválida', function(){
+    it('Exibir mensagem de erro ao submeter o formulário com um email com formatação inválida', function(){
         cy.get('#firstName') //Essa é uma outra forma de pegar um componente, direto pelo cypress
             .should('be.visible')
             .type('Gabriel')
@@ -65,4 +65,11 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
         cy.get('.error').should('be.visible')
     })
+
+    it.only('Campo de telefone só aceita números, se um valor não-numérico for digitado, seu valor continuará vazio.', function(){
+        cy.get('#phone')
+            .type('abcdefg')
+            .should('have.value', '')
+    })
+
 })
