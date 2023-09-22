@@ -10,13 +10,15 @@ describe('Central de Atendimento ao Cliente TAT', function() {
     })
 
     //O bloco it define um caso de teste.
-    it('Verificar o título da aplicação', function() {
+    it('Verificar o título da aplicação', 
+    function() {
         //Comando para confirmar o título do site
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT') 
     })
 
     //No caso do it.only significa que você está trabalhando somente nesse teste, ou seja, não precisa mais verificar e acessar o site se ele já está acessado
-    it('Preencher os campos obrigatórios e enviar o formulário', function() {
+    it('Preencher os campos obrigatórios e enviar o formulário', 
+    function() {
         cy.get('input[type="text"][name="firstName"]') //Comando para pegar o parametro a ser preenchido
             .should('be.visible') //Comando para afirmar que o campo está visivel
             .type('Gabriel') //Comando para preencher o campo
@@ -44,7 +46,8 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.get('.success').should('be.visible')
     })
 
-    it('Exibir mensagem de erro ao submeter o formulário com um email com formatação inválida', function(){
+    it('Exibir mensagem de erro ao submeter o formulário com um email com formatação inválida', 
+    function(){
         cy.get('#firstName') //Essa é uma outra forma de pegar um componente, direto pelo cypress
             .should('be.visible')
             .type('Gabriel')
@@ -66,10 +69,21 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.get('.error').should('be.visible')
     })
 
-    it.only('Campo de telefone só aceita números, se um valor não-numérico for digitado, seu valor continuará vazio.', function(){
+    it('Campo de telefone só aceita números, se um valor não-numérico for digitado, seu valor continuará vazio.', 
+    function(){
         cy.get('#phone')
             .type('abcdefg')
             .should('have.value', '')
     })
 
+    it.only('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', 
+    function(){
+        cy.get('#firstName').type('Gabriel')
+        cy.get('#lastName').type('Henrique')
+        cy.get('#email').type('gabrielhdeoliveira@gmail,com') 
+        cy.get('#phone-checkbox').click()
+        cy.get('#open-text-area').type(longText, { delay: 0}) 
+        cy.get('button[type="submit"]').click()
+        cy.get('.error').should('be.visible')
+    })
 })
