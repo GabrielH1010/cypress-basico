@@ -3,7 +3,6 @@
 //O bloco describe define a suíte de testes
 describe('Central de Atendimento ao Cliente TAT', function() {
     const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla, urna in tristique cursus, ligula tortor tincidunt massa, ac feugiat arcu justo at libero. Proin tristique nunc sit amet justo euismod bibendum. Suspendisse potenti. Fusce eget sagittis arcu, a commodo nisl. Integer eget ex in justo vulputate condimentum.'
-    const phone = '34998985542'
 
     //Este é um beforeEach global, que será executado antes de cada teste neste describe
     beforeEach(function() {
@@ -109,15 +108,21 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .should('have.value', '')
 
         cy.get('#phone')
-            .type(phone)
-            .should('have.value', phone)
+            .type('3499988546')
+            .should('have.value', '3499988546')
             .clear()
             .should('have.value', '')
     })
 
-    it.only('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', 
+    it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', 
     function(){
         cy.get('button[type="submit"]').click()
         cy.get('.error').should('be.visible')
+    })
+
+    it.only('Envia formulário com sucesso usando um comando customizado', 
+    function(){
+        cy.fillMandatoryFieldAndSubmit()
+        cy.get('.success').should('be.visible')
     })
 })
