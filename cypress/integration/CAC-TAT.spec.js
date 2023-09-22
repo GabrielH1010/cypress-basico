@@ -3,6 +3,7 @@
 //O bloco describe define a suíte de testes
 describe('Central de Atendimento ao Cliente TAT', function() {
     const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla, urna in tristique cursus, ligula tortor tincidunt massa, ac feugiat arcu justo at libero. Proin tristique nunc sit amet justo euismod bibendum. Suspendisse potenti. Fusce eget sagittis arcu, a commodo nisl. Integer eget ex in justo vulputate condimentum.'
+    const phone = '34998985542'
 
     //Este é um beforeEach global, que será executado antes de cada teste neste describe
     beforeEach(function() {
@@ -76,7 +77,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .should('have.value', '')
     })
 
-    it.only('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', 
+    it('Exibe mensagem de erro quando o telefone se torna obrigatório mas não é preenchido antes do envio do formulário', 
     function(){
         cy.get('#firstName').type('Gabriel')
         cy.get('#lastName').type('Henrique')
@@ -86,4 +87,32 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.get('button[type="submit"]').click()
         cy.get('.error').should('be.visible')
     })
+
+    it.only('Preenche e limpa os campos Nome, Sobrenome, E-mail e telefone', 
+    function(){
+        cy.get('#firstName')
+            .type('Gabriel')
+            .should('have.value', 'Gabriel')
+            .clear() //Comando para limpar o campo
+            .should('have.value', '') //Validando se o campo foi limpado
+
+        cy.get('#lastName')
+            .type('Henrique')
+            .should('have.value', 'Henrique')
+            .clear()
+            .should('have.value', '')
+
+        cy.get('#email')
+            .type('gabrielhdeoliveira@gmail,com')
+            .should('have.value', 'gabrielhdeoliveira@gmail,com')
+            .clear()
+            .should('have.value', '')
+
+        cy.get('#phone')
+            .type(phone)
+            .should('have.value', phone)
+            .clear()
+            .should('have.value', '')
+    })
+
 })
