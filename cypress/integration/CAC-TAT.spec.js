@@ -40,7 +40,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .type(longText, { delay: 0}) 
 
         //Comando para clicar no botão
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
 
         //Comando para verificar se a mensagem de sucesso foi exibida
         cy.get('.success').should('be.visible')
@@ -64,7 +64,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .should('be.visible')
             .type(longText, { delay: 0}) 
 
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
 
         cy.get('.error').should('be.visible')
     })
@@ -83,7 +83,7 @@ describe('Central de Atendimento ao Cliente TAT', function() {
         cy.get('#email').type('gabrielhdeoliveira@gmail,com') 
         cy.get('#phone-checkbox').click()
         cy.get('#open-text-area').type(longText, { delay: 0}) 
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
     })
 
@@ -116,11 +116,11 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
     it('Exibe mensagem de erro ao submeter o formulário sem preencher os campos obrigatórios', 
     function(){
-        cy.get('button[type="submit"]').click()
+        cy.contains('button', 'Enviar').click()
         cy.get('.error').should('be.visible')
     })
 
-    it.only('Envia formulário com sucesso usando um comando customizado', 
+    it('Envia formulário com sucesso usando um comando customizado', 
     function(){
         cy.fillMandatoryFieldAndSubmit()
         cy.get('.success').should('be.visible')
