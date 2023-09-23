@@ -2,6 +2,7 @@
 
 //O bloco describe define a suíte de testes
 describe('Central de Atendimento ao Cliente TAT', function() {
+    const Three_seconds = 3000
     const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fringilla, urna in tristique cursus, ligula tortor tincidunt massa, ac feugiat arcu justo at libero. Proin tristique nunc sit amet justo euismod bibendum. Suspendisse potenti. Fusce eget sagittis arcu, a commodo nisl. Integer eget ex in justo vulputate condimentum.'
 
     //Este é um beforeEach global, que será executado antes de cada teste neste describe
@@ -122,8 +123,11 @@ describe('Central de Atendimento ao Cliente TAT', function() {
 
     it('Envia formulário com sucesso usando um comando customizado', 
     function(){
+        cy.clock() //Comando para congelar o tempo do navegador
         cy.fillMandatoryFieldAndSubmit()
         cy.get('.success').should('be.visible')
+        cy.tick(Three_seconds) //Comando de pular 3s para verificar se a mensagem após 3s sumiu
+        cy.get('.success').should('not.be.visible')
     })
 
     it('Seleciona um produto (YouTube) por seu texto', 
@@ -193,6 +197,42 @@ describe('Central de Atendimento ao Cliente TAT', function() {
             .selectFile('@sampleFile')
             .should(function($input){
                 expect($input[0].files[0].name).to.equal('example.json')
+        })
+    })
+
+    it('Verificar que a politica de privacidade abre em outra aba sem a necessidade de um clique', 
+    function(){
+       cy.get('#privacy a').should('have.attr', 'target', '_blank')
+    })
+
+    it('Acessar a página da politica de privacidade removendo o target e então clicando no link', 
+    function(){
+       cy.get('#privacy a')
+            .invoke('removeAttr', 'target')
+            .click()
+
+        //Verificando se o texto é exibido no termo
+        cy.contains('Talking About Testing').should('be.visible') 
+    })
+
+    it('Acessar a página da politica de privacidade removendo o target e então clicando no link', 
+    function(){
+       cy.get('#privacy a')
+            .invoke('removeAttr', 'target')
+            .click()
+
+        //Verificando se o texto é exibido no termo
+        cy.contains('Talking About Testing').should('be.visible') 
+    })
+
+    it('Fazzendo uma requisição HTTP', 
+    function(){
+       cy.request('https://cac-tat.s3.eu-central-1.amazonaws.com/index.html')
+        .should(function(response){
+            const { status, statusText, body } = response
+            expect(status).to.equal(200) //Validando retorno 200 da API
+            expect(statusText).to.equal('OK')   //Validando status
+            expect(body).to.include('CAC TAT')  //Validando que o body inclue o texto passado
         })
     })
 })
